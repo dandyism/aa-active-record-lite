@@ -42,7 +42,9 @@ class SQLObject < MassObject
   def self.all
     sql = "SELECT #{self.table_name}.* FROM #{self.table_name}"
     
-    DBConnection.execute(sql)
+    results = DBConnection.execute(sql)
+    
+    self.parse_all(results)
   end
 
   def self.find(id)
