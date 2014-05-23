@@ -68,7 +68,7 @@ class SQLObject < MassObject
   end
 
   def attribute_values
-    # ...
+    self.class.columns.map { |attr_name| self.send("#{attr_name}") }
   end
   
   protected
