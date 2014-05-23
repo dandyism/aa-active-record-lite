@@ -42,7 +42,14 @@ class SQLObject < MassObject
   end
 
   def insert
-    # ...
+    cols = self.class.columns
+    col_names = cols.join(",")
+    placeholders = (['?'] * cols.count).join(",")
+    
+    sql = "INSERT INTO #{self.class.table_name} (#{col_names}) VALUES(#{placeholders})"
+    DBConnection.execute(sql, self.attribute_values)
+    
+    nil
   end
 
   def initialize(params = {})
