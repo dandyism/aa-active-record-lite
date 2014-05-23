@@ -10,7 +10,9 @@ end
 
 class SQLObject < MassObject
   def self.columns
-    # ...
+    sql = "SELECT * FROM #{self.table_name} LIMIT 0"
+    
+    DBConnection.execute2(sql).flatten
   end
 
   def self.table_name=(table_name)
