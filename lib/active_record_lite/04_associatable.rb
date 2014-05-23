@@ -20,7 +20,14 @@ end
 
 class BelongsToOptions < AssocOptions
   def initialize(name, options = {})
-    # ...
+    defaults = {
+      :foreign_key => "#{name.underscore}_id".to_sym,
+      :class_name => name.camelcase,
+      :primary_key => "id".to_sym
+    }
+
+    defaults.merge!(options)
+    defaults.each { |k, v| self.send("#{k}=", v) }
   end
 end
 
