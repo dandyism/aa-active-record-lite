@@ -18,7 +18,7 @@ class SQLObject < MassObject
     cols.map!(&:to_sym)
     
     # define attr_accessors
-    self.cols.each do |col|
+    cols.each do |col|
       define_method("#{col}") do
         self.attributes[col]
       end
