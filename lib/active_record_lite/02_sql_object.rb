@@ -70,9 +70,9 @@ class SQLObject < MassObject
       unless columns.include?(attr_name)
         raise "unknown attribute '#{attr_name}'"
       end
+      
+      self.send("#{attr_name}=", value)
     end
-    
-    @attributes = params
   end
 
   def save
