@@ -63,7 +63,9 @@ class SQLObject < MassObject
         "#{self.class.table_name}" (#{col_names})
       VALUES(#{placeholders})
     SQL
+    
     DBConnection.execute(sql, self.attribute_values)
+    self.id = DBConnection.last_insert_row_id
     
     nil
   end
