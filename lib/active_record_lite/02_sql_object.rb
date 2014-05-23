@@ -12,7 +12,21 @@ class SQLObject < MassObject
   def self.columns
     sql = "SELECT * FROM #{self.table_name} LIMIT 0"
     
-    DBConnection.execute2(sql).flatten
+    cols = DBConnection.execute2(sql).flatten
+    cols.map!(&:to_sym)
+    
+    # define attr_accessors
+    self.cols.each do |col|
+      define_method("#{col}") do
+        self.attributes[col]
+      end
+    
+      define_method("#{col}=") do |val|
+        self.attributes[col] = val
+      end
+    end
+    
+    cols
   end
 
   def self.table_name=(table_name)
