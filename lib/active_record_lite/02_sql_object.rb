@@ -85,7 +85,7 @@ class SQLObject < MassObject
   end
 
   def save
-    # ...
+    self.id.nil? ? self.insert : self.update
   end
 
   def update
