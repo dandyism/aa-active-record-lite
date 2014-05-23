@@ -18,7 +18,7 @@ class SQLObject < MassObject
   end
 
   def self.table_name
-    @table_name
+    @table_name ||= class_name_to_table
   end
 
   def self.all
@@ -50,5 +50,12 @@ class SQLObject < MassObject
 
   def attribute_values
     # ...
+  end
+  
+  protected
+  def self.class_name_to_table
+    self.name.gsub(/([a-z])([A-Z])/, '\1_\2')
+             .downcase
+             .pluralize
   end
 end
