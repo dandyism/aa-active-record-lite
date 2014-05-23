@@ -67,6 +67,8 @@ class SQLObject < MassObject
         raise "unknown attribute '#{attr_name}'"
       end
     end
+    
+    @attributes = params
   end
 
   def save
