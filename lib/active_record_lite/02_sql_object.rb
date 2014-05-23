@@ -53,23 +53,6 @@ class SQLObject < MassObject
     @attributes ||= {}
   end
 
-  def insert
-    cols = self.class.columns
-    col_names = cols.join(",")
-    placeholders = (['?'] * cols.count).join(",")
-    
-    sql = <<-SQL
-      INSERT INTO
-        "#{self.class.table_name}" (#{col_names})
-      VALUES(#{placeholders})
-    SQL
-    
-    DBConnection.execute(sql, self.attribute_values)
-    self.id = DBConnection.last_insert_row_id
-    
-    nil
-  end
-
   def initialize(params = {})
     columns = self.class.columns
     
@@ -86,25 +69,6 @@ class SQLObject < MassObject
 
   def save
     self.id.nil? ? self.insert : self.update
-  end
-
-  def update
-    set_line = self.attributes.map do |attr_name, value|
-      "#{attr_name} = :#{attr_name}" 
-    end.join(",")
-                              
-    sql = <<-SQL
-      UPDATE
-        "#{self.class.table_name}"
-      SET
-        #{set_line}
-      WHERE
-        "#{self.class.table_name}".id = :id
-    SQL
-    
-    DBConnection.execute(sql, self.attributes)
-    
-    nil
   end
 
   def attribute_values
@@ -139,5 +103,41 @@ class SQLObject < MassObject
     end
     
     cols
+  end
+
+  def insert
+    cols = self.class.columns
+    col_names = cols.join(",")
+    placeholders = (['?'] * cols.count).join(",")
+    
+    sql = <<-SQL
+      INSERT INTO
+        "#{self.class.table_name}" (#{col_names})
+      VALUES(#{placeholders})
+    SQL
+    
+    DBConnection.execute(sql, self.attribute_values)
+    self.id = DBConnection.last_insert_row_id
+    
+    nil
+  end
+
+  def update
+    set_line = self.attributes.map do |attr_name, value|
+      "#{attr_name} = :#{attr_name}" 
+    end.join(",")
+                              
+    sql = <<-SQL
+      UPDATE
+        "#{self.class.table_name}"
+      SET
+        #{set_line}
+      WHERE
+        "#{self.class.table_name}".id = :id
+    SQL
+    
+    DBConnection.execute(sql, self.attributes)
+    
+    nil
   end
 end

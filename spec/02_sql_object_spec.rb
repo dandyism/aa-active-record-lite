@@ -57,7 +57,7 @@ describe SQLObject do
   describe '#insert' do
     let(:cat) { Cat.new(name: 'Gizmo', owner_id: 1) }
 
-    before(:each) { cat.insert }
+    before(:each) { cat.send(:insert) }
 
     it '#attribute_values returns array of values' do
       cat = Cat.new(id: 123, name: 'cat1', owner_id: 1)
@@ -88,7 +88,7 @@ describe SQLObject do
 
       human.fname = 'Matthew'
       human.lname = 'von Rubens'
-      human.update
+      human.send(:update)
 
       # pull the human again
       human = Human.find(2)
