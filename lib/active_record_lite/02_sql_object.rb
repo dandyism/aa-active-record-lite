@@ -52,8 +52,16 @@ class SQLObject < MassObject
     # ...
   end
 
-  def initialize
-    # ...
+  def initialize(params = {})
+    columns = self.class.columns
+    
+    params.each do |attr_name, value|
+      attr_name = attr_name.to_sym
+      
+      unless columns.include?(attr_name)
+        raise "unknown attribute '#{attr_name}'"
+      end
+    end
   end
 
   def save
