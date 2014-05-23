@@ -14,15 +14,14 @@ class SQLObject < MassObject
   end
 
   def self.table_name=(table_name)
-    # ...
+    @table_name = table_name
   end
 
   def self.table_name
-    # ...
+    @table_name
   end
 
   def self.all
-    # ...
   end
 
   def self.find(id)
