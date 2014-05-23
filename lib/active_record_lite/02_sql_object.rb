@@ -89,7 +89,22 @@ class SQLObject < MassObject
   end
 
   def update
-    # ...
+    set_line = self.attributes.map do |attr_name, value|
+      "#{attr_name} = :#{attr_name}" 
+    end.join(",")
+                              
+    sql = <<-SQL
+      UPDATE
+        "#{self.class.table_name}"
+      SET
+        #{set_line}
+      WHERE
+        "#{self.class.table_name}".id = :id
+    SQL
+    
+    DBConnection.execute(sql, self.attributes)
+    
+    nil
   end
 
   def attribute_values
