@@ -48,7 +48,9 @@ class SQLObject < MassObject
   end
 
   def self.find(id)
-    # ...
+    sql = "SELECT #{self.table_name}.* FROM #{self.table_name} WHERE #{self.table_name}.id = :id"
+    results = DBConnection.execute(sql, id: id)
+    self.parse_all(results).first
   end
 
   def attributes
