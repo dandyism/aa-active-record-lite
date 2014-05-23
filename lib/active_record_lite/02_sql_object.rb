@@ -29,7 +29,7 @@ class SQLObject < MassObject
   end
 
   def attributes
-    # ...
+    @attributes ||= {}
   end
 
   def insert
