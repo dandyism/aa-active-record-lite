@@ -98,9 +98,7 @@ class SQLObject < MassObject
   
   protected
   def self.class_name_to_table
-    self.name.gsub(/([a-z])([A-Z])/, '\1_\2')
-             .downcase
-             .pluralize
+    self.name.tableize
   end
   
   def self.generate_columns
