@@ -24,7 +24,12 @@ class SQLObject < MassObject
   end
 
   def self.all
-    sql = "SELECT #{self.table_name}.* FROM #{self.table_name}"
+    sql = <<-SQL
+      SELECT 
+        "#{self.table_name}".*
+      FROM
+        "#{self.table_name}"
+    SQL
     
     results = DBConnection.execute(sql)
     
@@ -32,7 +37,14 @@ class SQLObject < MassObject
   end
 
   def self.find(id)
-    sql = "SELECT #{self.table_name}.* FROM #{self.table_name} WHERE #{self.table_name}.id = :id"
+    sql = <<-SQL
+      SELECT
+        "#{self.table_name}".*
+      FROM
+        "#{self.table_name}"
+      WHERE
+        "#{self.table_name}".id = :id
+    SQL
     results = DBConnection.execute(sql, id: id)
     self.parse_all(results).first
   end
@@ -46,7 +58,11 @@ class SQLObject < MassObject
     col_names = cols.join(",")
     placeholders = (['?'] * cols.count).join(",")
     
-    sql = "INSERT INTO #{self.class.table_name} (#{col_names}) VALUES(#{placeholders})"
+    sql = <<-SQL
+      INSERT INTO
+        "#{self.class.table_name}" (#{col_names})
+      VALUES(#{placeholders})
+    SQL
     DBConnection.execute(sql, self.attribute_values)
     
     nil
@@ -86,7 +102,12 @@ class SQLObject < MassObject
   end
   
   def self.generate_columns
-    sql = "SELECT * FROM #{self.table_name} LIMIT 0"
+    sql = <<-SQL
+      SELECT *
+      FROM
+        "#{self.table_name}"
+      LIMIT 0
+    SQL
     
     cols = DBConnection.execute2(sql).flatten
     cols.map!(&:to_sym)
