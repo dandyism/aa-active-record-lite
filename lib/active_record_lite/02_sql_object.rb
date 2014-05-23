@@ -12,23 +12,7 @@ end
 
 class SQLObject < MassObject
   def self.columns
-    sql = "SELECT * FROM #{self.table_name} LIMIT 0"
-    
-    cols = DBConnection.execute2(sql).flatten
-    cols.map!(&:to_sym)
-    
-    # define attr_accessors
-    cols.each do |col|
-      define_method("#{col}") do
-        self.attributes[col]
-      end
-    
-      define_method("#{col}=") do |val|
-        self.attributes[col] = val
-      end
-    end
-    
-    cols
+    @columns ||= self.generate_columns
   end
 
   def self.table_name=(table_name)
@@ -92,5 +76,25 @@ class SQLObject < MassObject
     self.name.gsub(/([a-z])([A-Z])/, '\1_\2')
              .downcase
              .pluralize
+  end
+  
+  def self.generate_columns
+    sql = "SELECT * FROM #{self.table_name} LIMIT 0"
+    
+    cols = DBConnection.execute2(sql).flatten
+    cols.map!(&:to_sym)
+    
+    # define attr_accessors
+    cols.each do |col|
+      define_method("#{col}") do
+        self.attributes[col]
+      end
+    
+      define_method("#{col}=") do |val|
+        self.attributes[col] = val
+      end
+    end
+    
+    cols
   end
 end
